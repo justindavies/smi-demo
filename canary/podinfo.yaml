@@ -26,4 +26,4 @@ spec:
         command:
         - ./podinfo
         - --port=9898
-        # - --random-error=true
+        - --random-error=true
