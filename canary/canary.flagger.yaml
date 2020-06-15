@@ -12,7 +12,7 @@ spec:
     port: 9898
   analysis:
     interval: 10s
-    threshold: 5k
+    threshold: 5000
     stepWeight: 10
     maxWeight: 100
     metrics:
