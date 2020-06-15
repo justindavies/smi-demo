@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       app: podinfo
+
   template:
     metadata:
       annotations:

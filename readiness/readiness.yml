@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: load
-  namespace: canary
+  namespace: readiness
 spec:
   selector:
     matchLabels:
@@ -21,7 +21,7 @@ spec:
         name: slow-cooker
         env:
           - name: QPS
-            value: "10"
+            value: "100"
           - name: CONCURRENCY
             value: "1"
         command: ["/bin/sh", "-c"]
@@ -33,7 +33,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: frontend
-  namespace: canary
+  namespace: readiness
 data:
  nginx.conf: |-
     events {}
@@ -50,7 +50,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: canary
+  namespace: readiness
   labels:
     app: frontend
 spec:
@@ -81,7 +81,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend
-  namespace: canary
+  namespace: readiness
 spec:
   ports:
   - name: service
@@ -93,10 +93,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: podinfo
-  namespace: canary
+  namespace: readiness
   labels:
     app.kubernetes.io/name: loadtester
-    app.kubernetes.io/instance: flagger
 spec:
   type: ClusterIP
   ports:

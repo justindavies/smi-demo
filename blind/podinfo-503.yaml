@@ -2,13 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: podinfo
-  namespace: canary
+  namespace: blind
   labels:
     app: podinfo
 spec:
   selector:
     matchLabels:
       app: podinfo
+  replicas: 1
+
   template:
     metadata:
       annotations:
@@ -18,11 +20,11 @@ spec:
     spec:
       containers:
       - name: podinfod
-        image: quay.io/stefanprodan/podinfo:1.7.1
+        image: quay.io/stefanprodan/podinfo:1.7.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9898
         command:
         - ./podinfo
         - --port=9898
-        - --random-error=true
+        # - --random-error=true
