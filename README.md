@@ -74,7 +74,7 @@ Status check results are √
 
 ### Deploy Linkerd control plane
 ```bash
-linkerd install | kubectl apply -f 
+linkerd install | kubectl apply -f -
 
 namespace/linkerd created
 clusterrole.rbac.authorization.k8s.io/linkerd-linkerd-identity created
@@ -159,7 +159,7 @@ deployment.apps/linkerd-grafana created
 Install Flagger
 
 ```bash
-kubectl apply -k github.com/weaveworks/flagger/kustomize/linkerd
+kubectl apply -k github.com/fluxcd/flagger/kustomize/linkerd
 ```
 
 ### Create Canary Namespace
