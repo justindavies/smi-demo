@@ -1,15 +1,15 @@
 apiVersion: flagger.app/v1beta1
 kind: Canary
 metadata:
-  name: podinfo
+  name: capdemo
   namespace: test
 spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: podinfo
+    name: capdemo
   service:
-    port: 9898
+    port: 80
   analysis:
     interval: 10s
     threshold: 5
