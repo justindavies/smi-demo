@@ -7,7 +7,7 @@ spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: capdemo-deployment
+    name: capdemo
   service:
     port: 80
   analysis:

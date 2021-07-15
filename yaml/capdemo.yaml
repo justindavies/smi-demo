@@ -27,28 +27,90 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - |-
-            slow_cooker -qps ${QPS} -concurrency ${CONCURRENCY} http://capdemo:80
+            slow_cooker -qps ${QPS} -concurrency ${CONCURRENCY} http://capdemo
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend
+  namespace: test
+data:
+ nginx.conf: |-
+    events {}
+    http {
+        server {
+          listen 8080;
+            location / {
+                proxy_pass http://capdemo;
+            }
+        }
+    }
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: capdemo-deployment
+  name: frontend
   namespace: test
+  labels:
+    app: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          volumeMounts:
+            - name: cfg
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: cfg
+          configMap:
+            name: frontend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: test
+spec:
+  ports:
+  - name: service
+    port: 8080
+  selector:
+    app: frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capdemo
+  namespace: test
+  labels:
+    app: campdemo
 spec:
   selector:
     matchLabels:
       app: capdemo
-  replicas: 2 
   template:
     metadata:
-      labels:
-        app: capdemo
       annotations:
         linkerd.io/inject: enabled
+      labels:
+        app: capdemo
     spec:
       containers:
       - name: nginx
         image: inklin/capdemo
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
 ---
@@ -61,7 +123,7 @@ metadata:
     app.kubernetes.io/name: loadtester
     app.kubernetes.io/instance: flagger
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 80
   selector:
