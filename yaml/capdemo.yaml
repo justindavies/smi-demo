@@ -21,7 +21,7 @@ spec:
         name: slow-cooker
         env:
           - name: QPS
-            value: "1000"
+            value: "500"
           - name: CONCURRENCY
             value: "1"
         command: ["/bin/sh", "-c"]
